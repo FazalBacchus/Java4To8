@@ -17,7 +17,6 @@ public class JspUpgrade
   public JspUpgrade()
   {
 
-	  
   }
   
   public static void main(String[] args)
