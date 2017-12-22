@@ -24,7 +24,7 @@ public class JspUpgrade
     JspUpgrade runner = new JspUpgrade();
     try
     {
-      String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\air\\";
+      String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\ewh\\";
       File folder = new File(foldertoUpdate);
       File[] listOfFiles = folder.listFiles();
       String lFilename = null;
@@ -35,7 +35,7 @@ public class JspUpgrade
             System.out.println(lFilename);
             
             String inFilename = foldertoUpdate + lFilename;
-            String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\air\\temp.jsp";
+            String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\ewh\\temp.jsp";
             File file = new File(inFilename);
             File fileO = new File(outFilename);
             FileOutputStream fileOut = new FileOutputStream(outFilename);
@@ -56,19 +56,51 @@ public class JspUpgrade
               StringTokenizer tokenizer = null;
               while ((bytesRead = bin.read(contents)) != -1) {
                 strFileContents = new String(contents, 0, bytesRead);
+                tokenizer = new StringTokenizer(strFileContents, "\n", true);
                 
+                while (tokenizer.hasMoreTokens()) {
+                    String temptoken = tokenizer.nextToken();
+                    counter = temptoken.indexOf("com.cargomanager.cms.util.StringUtils");
+                    if(counter>=0){
+                    	alreadyWritten = true;
+                    }
+                }
+
+                strFileContents = new String(contents, 0, bytesRead);
                 tokenizer = new StringTokenizer(strFileContents, "\n", true);
                 while (tokenizer.hasMoreTokens()) {
+                	
+                  String firstPart = "";
+                  String lastPart = "";
+                  String thisPart = "";
+                  int lastPartCounter = 0;
                   String temptoken = tokenizer.nextToken();
                   counter = temptoken.indexOf("<jsp:getProperty");
                   temptoken.indexOf("<jsp:getProperty");
-                  fileOut.write(temptoken.getBytes());
+                  
                   if (((temptoken.indexOf("<%@ page") >= 0) || (temptoken.indexOf("<%@page") >= 0)) && 
                     (!alreadyWritten)) {
                     fileOut.write(stringToInsert.getBytes());
                     alreadyWritten = true;
                   }
                   lineCounter++;
+                  
+                  if(counter>=0){
+                	  firstPart = temptoken.substring(0, counter);
+                	  int counter1 = (temptoken.substring(counter)).indexOf("/>");
+                	  thisPart = temptoken.substring(counter, counter+counter1+2);
+                	  lastPart = temptoken.substring(counter1+counter+2);
+
+                	  System.out.println(firstPart+"_"+thisPart+"_"+lastPart);  
+                  }
+                  
+                  fileOut.write(temptoken.getBytes());
+                  
+                  
+                  
+                  
+                  
+                  
                 }
                 counter++;
               }
@@ -76,6 +108,7 @@ public class JspUpgrade
               fileOut.close();
               Files.copy(fileO.toPath(), file.toPath(), new CopyOption[] { StandardCopyOption.REPLACE_EXISTING });
               Files.delete(fileO.toPath());
+              break;
             } catch (IOException e) {
               e.printStackTrace();
               try
