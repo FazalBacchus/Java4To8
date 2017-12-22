@@ -45,6 +45,7 @@ public class JspUpgrade
             boolean alreadyWritten = false;
             int counter = 1;
             int lineCounter = 1;
+            int instances = 0;
             String stringToInsert = "<%@page import=\"com.cargomanager.cms.util.StringUtils\"%>";
             try {
               fis = new FileInputStream(file);
@@ -91,7 +92,8 @@ public class JspUpgrade
                 	  thisPart = temptoken.substring(counter, counter+counter1+2);
                 	  lastPart = temptoken.substring(counter1+counter+2);
                 	  fixThisPart(thisPart);
-                	  System.out.println(firstPart+fixThisPart(thisPart)+lastPart);  
+                	  temptoken=(firstPart+fixThisPart(thisPart)+lastPart);
+                	  instances++;
                   }
                   
                   fileOut.write(temptoken.getBytes());
@@ -103,6 +105,7 @@ public class JspUpgrade
               fileOut.close();
               Files.copy(fileO.toPath(), file.toPath(), new CopyOption[] { StandardCopyOption.REPLACE_EXISTING });
               Files.delete(fileO.toPath());
+              System.out.println(instances+" found");
               break;
             } catch (IOException e) {
               e.printStackTrace();
