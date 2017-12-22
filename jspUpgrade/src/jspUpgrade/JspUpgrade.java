@@ -90,16 +90,11 @@ public class JspUpgrade
                 	  int counter1 = (temptoken.substring(counter)).indexOf("/>");
                 	  thisPart = temptoken.substring(counter, counter+counter1+2);
                 	  lastPart = temptoken.substring(counter1+counter+2);
-
-                	  System.out.println(firstPart+"_"+thisPart+"_"+lastPart);  
+                	  fixThisPart(thisPart);
+                	  System.out.println(firstPart+fixThisPart(thisPart)+lastPart);  
                   }
                   
                   fileOut.write(temptoken.getBytes());
-                  
-                  
-                  
-                  
-                  
                   
                 }
                 counter++;
@@ -148,5 +143,43 @@ public class JspUpgrade
     {
       e.printStackTrace();
     }
+  }
+  
+  private static String fixThisPart(String thisPart) {
+	  String returnString = "";
+	  String autoString = "<%=StringUtils.returnBlank(";
+	  String tempString = "";
+	  String name = "";
+	  String singleChar = "";
+	  String property = "";
+	  int counter = 0;
+	  tempString = thisPart.substring(23);
+	  for(int x=0; x<tempString.length(); x++) {
+		  singleChar = tempString.substring(x, x+1);
+
+		  if(singleChar.equals("\"")){
+			  break;
+		  }
+		  name=name+singleChar;
+	  }
+	  counter = tempString.indexOf("property=");
+	  if(counter>=0) {
+		  tempString = tempString.substring(counter+10);
+		  for(int x=0; x<tempString.length(); x++) {
+			  if(x==0){
+				  singleChar = tempString.substring(x, x+1).toUpperCase();
+			  } else {
+				  singleChar = tempString.substring(x, x+1);
+			  }	  
+
+			  if(singleChar.equals("\"")){
+				  break;
+			  }
+			  property=property+singleChar;
+		  }
+	  }
+	  autoString = autoString+name+".get"+property+"())%>";
+	  
+	  return autoString;
   }
 }
