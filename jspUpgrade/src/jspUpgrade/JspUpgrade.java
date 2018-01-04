@@ -24,10 +24,16 @@ public class JspUpgrade
     JspUpgrade runner = new JspUpgrade();
     try
     {
-      String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\ewh\\";
+      String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\air\\";
       File folder = new File(foldertoUpdate);
       File[] listOfFiles = folder.listFiles();
       String lFilename = null;
+      String firstPart = "";
+      String lastPart = "";
+      String thisPart = "";
+      int lastPartCounter = 0;
+      String temptoken = null;
+      int instances = 0;      
       for (int i = 0; i < listOfFiles.length; i++) {
         if (listOfFiles[i].isFile()) {
           lFilename = listOfFiles[i].getName();
@@ -35,7 +41,7 @@ public class JspUpgrade
             System.out.println(lFilename);
             
             String inFilename = foldertoUpdate + lFilename;
-            String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\ewh\\temp.jsp";
+            String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\air\\temp.jsp";
             File file = new File(inFilename);
             File fileO = new File(outFilename);
             FileOutputStream fileOut = new FileOutputStream(outFilename);
@@ -45,8 +51,9 @@ public class JspUpgrade
             boolean alreadyWritten = false;
             int counter = 1;
             int lineCounter = 1;
-            int instances = 0;
-            String stringToInsert = "<%@page import=\"com.cargomanager.cms.util.StringUtils\"%>";
+
+            String stringToInsert = "<%@page import=\"com.cargomanager.cms.util.StringUtils\"%>\n";
+            
             try {
               fis = new FileInputStream(file);
               
@@ -60,7 +67,7 @@ public class JspUpgrade
                 tokenizer = new StringTokenizer(strFileContents, "\n", true);
                 
                 while (tokenizer.hasMoreTokens()) {
-                    String temptoken = tokenizer.nextToken();
+                    temptoken = tokenizer.nextToken();
                     counter = temptoken.indexOf("com.cargomanager.cms.util.StringUtils");
                     if(counter>=0){
                     	alreadyWritten = true;
@@ -71,11 +78,11 @@ public class JspUpgrade
                 tokenizer = new StringTokenizer(strFileContents, "\n", true);
                 while (tokenizer.hasMoreTokens()) {
                 	
-                  String firstPart = "";
-                  String lastPart = "";
-                  String thisPart = "";
-                  int lastPartCounter = 0;
-                  String temptoken = tokenizer.nextToken();
+                  firstPart = "";
+                  lastPart = "";
+                  thisPart = "";
+                  lastPartCounter = 0;
+                  temptoken = tokenizer.nextToken();
                   counter = temptoken.indexOf("<jsp:getProperty");
                   temptoken.indexOf("<jsp:getProperty");
                   
@@ -106,7 +113,8 @@ public class JspUpgrade
               Files.copy(fileO.toPath(), file.toPath(), new CopyOption[] { StandardCopyOption.REPLACE_EXISTING });
               Files.delete(fileO.toPath());
               System.out.println(instances+" found");
-              break;
+              
+              //break;
             } catch (IOException e) {
               e.printStackTrace();
               try
@@ -141,6 +149,7 @@ public class JspUpgrade
         }
         
       }
+      System.out.println("Done...");
     }
     catch (Exception e)
     {
