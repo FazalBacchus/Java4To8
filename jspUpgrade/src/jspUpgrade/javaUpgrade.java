@@ -120,7 +120,7 @@ public class javaUpgrade {
 	              Files.delete(fileO.toPath());
 	              System.out.println(instances+" found");
 
-	              break;
+	              //break;
 	      
 	              
 	            } catch (IOException e) {
@@ -244,7 +244,7 @@ public class javaUpgrade {
 	              Files.delete(fileO.toPath());
 	              System.out.println(instances+" found");
 
-	              break;
+	              //break;
 	              
 	            } catch (IOException e) {
 	              e.printStackTrace();
@@ -347,7 +347,7 @@ public class javaUpgrade {
 	  	                    if(!alreadyWritten) {
 	  	                    	fileOut.write(temptoken.getBytes());
 		  	                    fileOut.write("\n".getBytes());
-		  	                    fileOut.write("\t".getBytes());
+		  	                    fileOut.write("\t\t".getBytes());
 		  	                    fileOut.write(stringToInsert.getBytes());
 		  	                    fileOut.write("\n".getBytes());
 		  	                    instances++;
@@ -369,7 +369,7 @@ public class javaUpgrade {
 	              Files.delete(fileO.toPath());
 	              System.out.println(instances+" found");
 
-	              break;
+	              //break;
 	              
 	            } catch (IOException e) {
 	              e.printStackTrace();
@@ -479,7 +479,7 @@ public class javaUpgrade {
 	              Files.delete(fileO.toPath());
 	              System.out.println(instances+" found");
 
-	              break;
+	              //break;
 	              
 	            } catch (IOException e) {
 	              e.printStackTrace();
