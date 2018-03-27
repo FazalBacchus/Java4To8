@@ -24,7 +24,8 @@ public class JspUpgrade
     JspUpgrade runner = new JspUpgrade();
     try
     {
-      String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\air\\";
+      //String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\fmm\\";
+      String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\css\\";
       File folder = new File(foldertoUpdate);
       File[] listOfFiles = folder.listFiles();
       String lFilename = null;
@@ -41,7 +42,8 @@ public class JspUpgrade
             System.out.println(lFilename);
             
             String inFilename = foldertoUpdate + lFilename;
-            String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\air\\temp.jsp";
+            //String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\fmm\\temp.jsp";
+            String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\css\\temp.jsp";
             File file = new File(inFilename);
             File fileO = new File(outFilename);
             FileOutputStream fileOut = new FileOutputStream(outFilename);
