@@ -120,7 +120,7 @@ public class javaUpgrade {
 	              Files.delete(fileO.toPath());
 	              System.out.println(instances+" found");
 
-	              //break;
+	              break;
 	      
 	              
 	            } catch (IOException e) {
@@ -244,7 +244,7 @@ public class javaUpgrade {
 	              Files.delete(fileO.toPath());
 	              System.out.println(instances+" found");
 
-	              //break;
+	              break;
 	              
 	            } catch (IOException e) {
 	              e.printStackTrace();
@@ -347,6 +347,7 @@ public class javaUpgrade {
 	  	                    if(!alreadyWritten) {
 	  	                    	fileOut.write(temptoken.getBytes());
 		  	                    fileOut.write("\n".getBytes());
+		  	                    fileOut.write("\t".getBytes());
 		  	                    fileOut.write(stringToInsert.getBytes());
 		  	                    fileOut.write("\n".getBytes());
 		  	                    instances++;
@@ -368,7 +369,7 @@ public class javaUpgrade {
 	              Files.delete(fileO.toPath());
 	              System.out.println(instances+" found");
 
-	              //break;
+	              break;
 	              
 	            } catch (IOException e) {
 	              e.printStackTrace();
@@ -405,7 +406,117 @@ public class javaUpgrade {
 	        
 	      }
 	      
-	      
+
+//PASS 4	      
+	      //PASS 4
+	      folder = new File(foldertoUpdate);
+	      listOfFiles = folder.listFiles();
+	      lFilename = null;
+	      lastPartCounter = 0;
+	      temptoken = null;
+	      instances = 0;      
+	      for (int i = 0; i < listOfFiles.length; i++) {
+	        if (listOfFiles[i].isFile()) {
+	          lFilename = listOfFiles[i].getName();
+	          if (lFilename.indexOf(".java") >= 0) {
+	            System.out.println(lFilename);
+	            
+	            String inFilename = foldertoUpdate + lFilename;
+	            //String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\fmm\\temp.jsp";
+	            File file = new File(inFilename);
+	            File fileO = new File(outFilename);
+	            FileOutputStream fileOut = new FileOutputStream(outFilename);
+	            FileInputStream fis = null;
+	            BufferedInputStream bin = null;
+	            String strFileContents = "";
+	            boolean alreadyWritten = false;
+	            int counter = 1;
+	            int lineCounter = 1;
+	            boolean skipOneLine = true;
+	            String stringToInsert = "(String)session.getAttribute(\"Login\"), (String)session.getAttribute(\"User\"), (String)session.getAttribute(\"securityLevel\"))";
+	            String stringToSearch = "(String)session.getAttribute(\"Login\"), (String)session.getAttribute(\"User\"), (String)session.getAttribute(\"securityLevel\"), con, false)";
+	            		
+	            
+	            try {
+	            	
+	              //PASS 4	
+	              fis = new FileInputStream(file);
+	              
+	              bin = new BufferedInputStream(fis);
+	              byte[] contents = new byte[5000000];
+	              int bytesRead = 0;
+	              StringBuffer currentline = new StringBuffer();
+	              StringTokenizer tokenizer = null;
+
+	              // pass 1
+	              while ((bytesRead = bin.read(contents)) != -1) {
+	                strFileContents = new String(contents, 0, bytesRead);
+	                tokenizer = new StringTokenizer(strFileContents, "\n", true);
+	                while (tokenizer.hasMoreTokens()) {
+	                	
+	                  lastPartCounter = 0;
+	                  temptoken = tokenizer.nextToken();
+	                  skipOneLine = false;
+	                  alreadyWritten = false;
+	                  
+	                  if (temptoken.indexOf(stringToSearch) < 0) {
+	  	                    if(temptoken.indexOf(stringToInsert) >= 0) {
+	  	                    	temptoken = fixThisPart(temptoken.toString(), stringToSearch, stringToInsert);
+		  	                    instances++;
+		  	                    alreadyWritten = true;
+
+	  	                    }    
+  	                  }
+                	  fileOut.write(temptoken.getBytes());
+	                  lineCounter++;
+	                }
+	                counter++;
+	              }
+
+	              bin.close();
+	              fileOut.close();
+	              Files.copy(fileO.toPath(), file.toPath(), new CopyOption[] { StandardCopyOption.REPLACE_EXISTING });
+	              Files.delete(fileO.toPath());
+	              System.out.println(instances+" found");
+
+	              break;
+	              
+	            } catch (IOException e) {
+	              e.printStackTrace();
+	              try
+	              {
+	                fis.close();
+	                bin.close();
+	              } catch (IOException ex) {
+	                ex.printStackTrace();
+	              }
+	            }
+	            finally
+	            {
+	              try
+	              {
+	                fis.close();
+	                bin.close();
+	              } catch (IOException ex) {
+	                ex.printStackTrace();
+	              }
+	            }
+	            try
+	            {
+	              fis.close();
+	              bin.close();
+	            } catch (IOException ex) {
+	              ex.printStackTrace();
+	            }
+	          }
+	        }
+	        else {
+	          listOfFiles[i].isDirectory();
+	        }
+	        
+	      }
+
+
 	      System.out.println("Done...");
 	      
 	    }
@@ -415,41 +526,24 @@ public class javaUpgrade {
 	    }
 	  }
 	  
-	  private static String fixThisPart(String thisPart) {
+	  private static String fixThisPart(String thisPart, String stringToSearch, String stringToInsert) {
 		  String returnString = "";
-		  String autoString = "<%=StringUtils.returnBlank(";
+		  String autoString = stringToSearch;
 		  String tempString = "";
 		  String name = "";
 		  String singleChar = "";
 		  String property = "";
 		  int counter = 0;
-		  tempString = thisPart.substring(23);
-		  for(int x=0; x<tempString.length(); x++) {
-			  singleChar = tempString.substring(x, x+1);
+		  tempString = thisPart;
 
-			  if(singleChar.equals("\"")){
-				  break;
-			  }
-			  name=name+singleChar;
-		  }
-		  counter = tempString.indexOf("property=");
+		  counter = tempString.indexOf(stringToInsert);
 		  if(counter>=0) {
-			  tempString = tempString.substring(counter+10);
-			  for(int x=0; x<tempString.length(); x++) {
-				  if(x==0){
-					  singleChar = tempString.substring(x, x+1).toUpperCase();
-				  } else {
-					  singleChar = tempString.substring(x, x+1);
-				  }	  
-
-				  if(singleChar.equals("\"")){
-					  break;
-				  }
-				  property=property+singleChar;
-			  }
+			  tempString = tempString.substring(0,counter)+
+					  "(String)session.getAttribute(\"Login\"), (String)session.getAttribute(\"User\"), (String)session.getAttribute(\"securityLevel\"), con, false"+
+					  tempString.substring(counter+122,tempString.length());
 		  }
-		  autoString = autoString+name+".get"+property+"())%>";
-		  
+		  autoString = tempString;
+		  System.out.println(autoString);
 		  return autoString;
 	  }	  
 }
