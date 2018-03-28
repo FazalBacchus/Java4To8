@@ -22,8 +22,8 @@ public class javaUpgrade {
 	  public static void main(String[] args)
 	  {
 	    JspUpgrade runner = new JspUpgrade();
-	    String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\WEB-INF\\src\\com\\cargomanager\\cms\\acc\\ar\\event\\";
-	    String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\WEB-INF\\src\\com\\cargomanager\\cms\\acc\\ar\\event\\temp.jsp";
+	    String foldertoUpdate = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\WEB-INF\\src\\com\\cargomanager\\cms\\ewh\\event\\";
+	    String outFilename = "c:\\Program Files (x86)\\Apache Tomcat 4.0\\webapps\\cmsLPK\\WEB-INF\\src\\com\\cargomanager\\cms\\ewh\\event\\temp.jsp";
 	    
 	    try
 	      {
